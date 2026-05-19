@@ -197,5 +197,5 @@ export default function JournalBuilder() {
         </div>
       </div>
     </main>
-  );
+  );'
 }
