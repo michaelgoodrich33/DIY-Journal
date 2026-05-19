@@ -12,11 +12,12 @@ export default function JournalBuilder() {
     personalConnection: true,
   });
 
-  const toggleOption = (key: string) => {
-    setOptions((prev: any) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
+  const toggleOption = (key) => {
+    setOptions((prev) => {
+      const updated = { ...prev };
+      updated[key] = !prev[key];
+      return updated;
+    });
   };
 
   const generatePDF = () => {
@@ -24,7 +25,7 @@ export default function JournalBuilder() {
     
     // --- 1. COVER PAGE ---
     doc.setFontSize(24);
-    doc.setTextColor(37, 99, 235); // Blue Accent
+    doc.setTextColor(37, 99, 235); 
     doc.text("Daily Journal", 105, 80, { align: "center" });
     
     if (quote) {
@@ -48,7 +49,7 @@ export default function JournalBuilder() {
       doc.line(20, yPos + 2, 190, yPos + 2);
       yPos += 12;
 
-      // Dynamic North Star Quote at the top of every day page
+      // Dynamic North Star Quote
       if (quote) {
         doc.setFont("helvetica", "italic");
         doc.setFontSize(11);
@@ -122,7 +123,7 @@ export default function JournalBuilder() {
         yPos += 50;
       }
 
-      // Art Therapy (1/3 of page blank, no boxes)
+      // Art Therapy
       if (options.artTherapy) {
         doc.setFont("helvetica", "bold");
         doc.text("Art Therapy", 20, yPos);
@@ -131,13 +132,13 @@ export default function JournalBuilder() {
         yPos += 85; 
       }
 
-      // Personal Connection (Heading only, pure white space below)
+      // Personal Connection
       if (options.personalConnection) {
         doc.setFont("helvetica", "bold");
         doc.text("What’s on Top. Any thoughts or feelings I have", 20, yPos);
       }
 
-      // Booklet Page Numbering
+      // Page Numbering
       doc.setFontSize(8);
       doc.setTextColor(150);
       doc.text(`Day ${i} - Page ${doc.internal.getNumberOfPages()}`, 105, 285, { align: "center" });
@@ -155,31 +156,29 @@ export default function JournalBuilder() {
         </header>
 
         <div className="space-y-6">
-          {/* Duration Selector */}
           <div>
             <label className="block text-sm font-bold mb-2">Booklet Duration</label>
             <div className="flex gap-2">
               {[7, 14, 21, 30].map(d => (
-                <button key={d} onClick={() => setDuration(d)} className={`flex-1 py-2 rounded-lg border transition ${duration === d ? 'bg-blue-600 text-white font-bold' : 'bg-white hover:bg-slate-50'}`}>{d} Days</button>
+                <button key={d} type="button" onClick={() => setDuration(d)} className={`flex-1 py-2 rounded-lg border transition ${duration === d ? 'bg-blue-600 text-white font-bold' : 'bg-white hover:bg-slate-50'}`}>{d} Days</button>
               ))}
             </div>
           </div>
 
-          {/* Module Selector */}
           <div className="grid grid-cols-1 gap-2">
             <label className="block text-sm font-bold mb-1">Active Booklet Modules</label>
             {Object.keys(options).map((key) => (
               <button 
                 key={key} 
+                type="button"
                 onClick={() => toggleOption(key)}
-                className={`text-left p-3 rounded-lg border-2 transition capitalize ${options[key as keyof typeof options] ? 'border-blue-600 bg-blue-50 font-medium' : 'border-slate-100 text-slate-400'}`}
+                className={`text-left p-3 rounded-lg border-2 transition capitalize ${options[key] ? 'border-blue-600 bg-blue-50 font-medium' : 'border-slate-100 text-slate-400'}`}
               >
                 {key.replace(/([A-Z])/g, ' $1')}
               </button>
             ))}
           </div>
 
-          {/* Quote Input */}
           <div>
             <label className="block text-sm font-bold mb-2">Personal North Star Quote</label>
             <textarea 
@@ -190,12 +189,11 @@ export default function JournalBuilder() {
             />
           </div>
 
-          {/* PDF Trigger Button */}
-          <button onClick={generatePDF} className="w-full py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition shadow-md">
+          <button type="button" onClick={generatePDF} className="w-full py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition shadow-md">
             Generate Document
           </button>
         </div>
       </div>
     </main>
-  );'
+  );
 }
